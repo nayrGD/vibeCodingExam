@@ -1,9 +1,9 @@
 package org.example.vibecoding.service;
 
-
-
 import lombok.RequiredArgsConstructor;
+import org.example.vibecoding.dao.CashFlowDao;
 import org.example.vibecoding.model.CashFlow;
+import org.example.vibecoding.model.Donation;
 import org.example.vibecoding.model.Expense;
 import org.springframework.stereotype.Service;
 
@@ -11,50 +11,55 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CashFlowService {
 
-    private final CashFlowRepository cashFlowRepository;
+    private final CashFlowDao cashFlowDao;
 
     public List<CashFlow> getCashFlows(String type) {
+        List<CashFlow> all = cashFlowDao.findAll();
+
         if ("donation".equalsIgnoreCase(type)) {
-            return cashFlowRepository.findAllDonations();
+            return all.stream()
+                    .filter(cf -> cf instanceof Donation)
+                    .collect(Collectors.toList());
         } else if ("expense".equalsIgnoreCase(type)) {
-            return cashFlowRepository.findAllExpenses();
+            return all.stream()
+                    .filter(cf -> cf instanceof Expense)
+                    .collect(Collectors.toList());
         }
-        return cashFlowRepository.findAll();
+        return all;
     }
 
     public List<CashFlow> getCashFlowsByUserId(String userId) {
-        return cashFlowRepository.findByUserId(userId);
+        return cashFlowDao.findByUserId(userId);
     }
 
     public Expense createExpense(Expense expense) {
-        // Règle métier : Génération automatique de l'ID UUID si non fourni
+
         if (expense.getId() == null || expense.getId().isBlank()) {
             expense.setId(UUID.randomUUID().toString());
         }
 
-        // Règle métier : Horodatage à l'instant présent lors de la création
         if (expense.getCreatedAt() == null) {
             expense.setCreatedAt(Instant.now());
         }
 
-        // Validation simple du montant
         if (expense.getAmount() == null || expense.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Le montant de la dépense doit être supérieur à zéro.");
         }
 
-        return cashFlowRepository.saveExpense(expense);
+        cashFlowDao.saveExpense(expense);
+        return expense;
     }
 
     public BigDecimal calculateBalance() {
-        BigDecimal totalDonations = cashFlowRepository.sumAllDonations();
-        BigDecimal totalExpenses = cashFlowRepository.sumAllExpenses();
+        BigDecimal totalDonations = cashFlowDao.sumDonations();
+        BigDecimal totalExpenses = cashFlowDao.sumExpenses();
 
-        // Solde = Donations - Dépenses
         return totalDonations.subtract(totalExpenses);
     }
 }
