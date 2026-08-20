@@ -1,4 +1,4 @@
-package org.example.videcoding;
+package org.example.vibecoding;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

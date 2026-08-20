@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.example</groupId>
-    <artifactId>videCoding</artifactId>
+    <artifactId>vibeCoding</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>videCoding</name>
     <description>videCoding</description>
