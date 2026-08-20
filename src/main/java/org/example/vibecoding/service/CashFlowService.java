@@ -5,7 +5,6 @@ package org.example.vibecoding.service;
 import lombok.RequiredArgsConstructor;
 import org.example.vibecoding.model.CashFlow;
 import org.example.vibecoding.model.Expense;
-import org.example.vibecoding.repository.CashFlowRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
