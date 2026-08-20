@@ -9,10 +9,7 @@ CREATE TABLE users (
     phone       VARCHAR(50)
 );
 
--- ============================================================
--- Table de base pour les flux de trésorerie (correspond à CashFlow.java)
--- Stratégie d'héritage : "table par classe" (joined inheritance)
--- ============================================================
+
 CREATE TABLE cash_flow (
     id              VARCHAR(36) PRIMARY KEY,
     created_at      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
@@ -31,9 +28,6 @@ CREATE TABLE cash_flow (
 CREATE INDEX idx_cash_flow_user_id ON cash_flow(user_id);
 CREATE INDEX idx_cash_flow_created_at ON cash_flow(created_at);
 
--- ============================================================
--- Table des dons (correspond à Donation.java)
--- ============================================================
 CREATE TABLE donation (
     id      VARCHAR(36) PRIMARY KEY,
     comment TEXT,
@@ -43,9 +37,6 @@ CREATE TABLE donation (
         ON DELETE CASCADE
 );
 
--- ============================================================
--- Table des dépenses (correspond à Expense.java / ExpenseFrequency.java)
--- ============================================================
 CREATE TABLE expense (
     id        VARCHAR(36) PRIMARY KEY,
     reason    VARCHAR(500),
