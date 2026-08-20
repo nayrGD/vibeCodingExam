@@ -15,7 +15,6 @@ import java.util.List;
 @Repository
 public class CashFlowDao {
 
-    // Pour : GET /cash-flows?type=donation | expense
     public List<CashFlow> findByType(String type) {
         List<CashFlow> list = new ArrayList<>();
         String sql = "SELECT cf.id, cf.created_at, cf.amount, cf.user_id, " +
@@ -45,7 +44,6 @@ public class CashFlowDao {
         return list;
     }
 
-    // Pour : GET /users/{id}/cash-flows
     public List<CashFlow> findByUserId(String userId) {
         List<CashFlow> list = new ArrayList<>();
         String sql = "SELECT cf.id, cf.created_at, cf.amount, cf.user_id, " +
@@ -93,11 +91,11 @@ public class CashFlowDao {
                 stmt2.setString(3, expense.getFrequency() != null ? expense.getFrequency().name() : ExpenseFrequency.NONE.name());
                 stmt2.executeUpdate();
 
-                conn.commit(); // Validation
+                conn.commit();
                 System.out.println("Dépense insérée avec succès !");
 
             } catch (SQLException e) {
-                conn.rollback(); // Annulation en cas d'erreur
+                conn.rollback();
                 e.printStackTrace();
             }
         } catch (SQLException e) {
@@ -105,7 +103,7 @@ public class CashFlowDao {
         }
     }
 
-    // Pour : GET /balance
+
     public BigDecimal sumDonations() {
         String sql = "SELECT COALESCE(SUM(cf.amount), 0) FROM cash_flow cf INNER JOIN donation d ON cf.id = d.id";
         return executeSumQuery(sql);
