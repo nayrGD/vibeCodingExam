@@ -7,13 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class User {
-    private Long id;
-    private String name;
+    private String id;
+    private String ref;
+    private String firstName;
+    private String lastName;
     private String email;
+    private String phone;
 }
-
-
-
-

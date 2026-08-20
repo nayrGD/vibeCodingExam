@@ -1,18 +1,16 @@
 package org.example.vibecoding.model;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.Instant;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class CashFlow {
+public abstract class CashFlow {
     private String id;
     private Instant createdAt;
     private BigDecimal amount;
