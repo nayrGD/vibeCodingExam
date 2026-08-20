@@ -12,22 +12,25 @@ import java.util.Optional;
 @Repository
 public class UserDao {
 
-    private static final String TABLE = "users";
+    private static final String TABLE = "app_user";
 
-    public Optional<User> findById(Long id) {
+    public Optional<User> findById(String id) {
         String sql = "SELECT * FROM " + TABLE + " WHERE id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setLong(1, id);
+            stmt.setString(1, id);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     User user = new User(
-                            rs.getLong("id"),
-                            rs.getString("name"),
-                            rs.getString("email")
+                            rs.getString("id"),
+                            rs.getString("ref"),
+                            rs.getString("first_name"),
+                            rs.getString("last_name"),
+                            rs.getString("email"),
+                            rs.getString("phone")
                     );
                     return Optional.of(user);
                 }
@@ -49,9 +52,12 @@ public class UserDao {
 
             while (rs.next()) {
                 users.add(new User(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getString("email")
+                        rs.getString("id"),
+                        rs.getString("ref"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("email"),
+                        rs.getString("phone")
                 ));
             }
         } catch (SQLException e) {
@@ -61,14 +67,17 @@ public class UserDao {
     }
 
     public void save(User user) {
-        String sql = "INSERT INTO " + TABLE + " (id, name, email) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO " + TABLE + " (id, ref, first_name, last_name, email, phone) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setLong(1, user.getId());
-            pstmt.setString(2, user.getName());
-            pstmt.setString(3, user.getEmail());
+            pstmt.setString(1, user.getId());
+            pstmt.setString(2, user.getRef());
+            pstmt.setString(3, user.getFirstName());
+            pstmt.setString(4, user.getLastName());
+            pstmt.setString(5, user.getEmail());
+            pstmt.setString(6, user.getPhone());
 
             pstmt.executeUpdate();
             System.out.println("Utilisateur inséré avec succès !");
